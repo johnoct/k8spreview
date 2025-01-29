@@ -16,10 +16,31 @@ A terminal-based Kubernetes YAML resource viewer with an interactive TUI interfa
 
 ### Prerequisites
 
-- Go 1.21 or later
-- Git
+- Go 1.21 or later (for building from source)
+- Git (for building from source)
 
-### Install from Source
+### Using Go Install
+
+The easiest way to install k8spreview is using Go:
+
+```bash
+go install github.com/yourusername/k8spreview@latest  # Latest version
+# or
+go install github.com/yourusername/k8spreview@v0.1.0  # Specific version
+```
+
+### Using Homebrew
+
+```bash
+brew tap yourusername/tap
+brew install k8spreview
+```
+
+### Binary Releases
+
+Download pre-built binaries from the [releases page](https://github.com/yourusername/k8spreview/releases).
+
+### Building from Source
 
 1. Clone the repository:
 ```bash
@@ -57,7 +78,11 @@ air -c .air.toml
 ## Usage
 
 ```bash
+# View a YAML file
 k8spreview <yaml-file>
+
+# Show version information
+k8spreview -version
 ```
 
 ### Navigation
@@ -87,11 +112,13 @@ See the [examples](./examples) directory for more sample YAML files.
 │   ├── k8s/             # Kubernetes resource handling
 │   │   ├── k8s.go       # Core resource types and functions
 │   │   └── doc.go       # Package documentation
-│   └── ui/              # TUI components and styling
-│       ├── app.go       # Application entry point
-│       ├── model.go     # UI state and update logic
-│       ├── styles.go    # UI styling definitions
-│       └── doc.go       # Package documentation
+│   ├── ui/              # TUI components and styling
+│   │   ├── app.go       # Application entry point
+│   │   ├── model.go     # UI state and update logic
+│   │   ├── styles.go    # UI styling definitions
+│   │   └── doc.go       # Package documentation
+│   └── version/         # Version information
+│       └── version.go   # Version, commit, and build date
 ├── docs/                # Documentation
 ├── examples/            # Example YAML files
 └── tests/              # Test files
@@ -136,6 +163,16 @@ go vet ./...
 golangci-lint run
 ```
 
+### Release Process
+
+1. Update version in `pkg/version/version.go`
+2. Create and push a new tag:
+```bash
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+```
+3. GitHub Actions will automatically build and publish the release
+
 ## Contributing
 
 1. Fork the repository
@@ -153,4 +190,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Bubble Tea](https://github.com/charmbracelet/bubbletea) - Terminal UI framework
 - [Lip Gloss](https://github.com/charmbracelet/lipgloss) - Style definitions
 - [YAML v3](https://github.com/go-yaml/yaml) - YAML parsing
+- [GoReleaser](https://goreleaser.com/) - Release automation
 

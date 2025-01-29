@@ -1,0 +1,54 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: ./cmd/main.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X k8spreview/pkg/version.Version={{.Version}}
+      - -X k8spreview/pkg/version.Commit={{.Commit}}
+      - -X k8spreview/pkg/version.Date={{.Date}}
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+
+brews:
+  - name: k8spreview
+    homepage: "https://github.com/yourusername/k8spreview"
+    description: "A terminal-based Kubernetes YAML resource viewer with an interactive TUI interface"
+    license: "MIT"
+    tap:
+      owner: yourusername
+      name: homebrew-tap
+    folder: Formula
+    install: |
+      bin.install "k8spreview"
+    test: |
+      system "#{bin}/k8spreview -version"
