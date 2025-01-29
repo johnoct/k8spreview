@@ -12,6 +12,8 @@ A terminal-based Kubernetes YAML resource viewer with an interactive TUI interfa
 - Color-coded resource types for better visibility
 - Keyboard-based navigation
 
+![Demo](demo.gif)
+
 ## Installation
 
 ### Prerequisites
@@ -41,9 +43,9 @@ git clone https://github.com/johnoct/k8spreview.git
 cd k8spreview
 ```
 
-2. Build the binary:
+2. Build using Make:
 ```bash
-go build -o k8spreview cmd/main.go
+make build
 ```
 
 3. (Optional) Install globally:
@@ -60,12 +62,12 @@ go mod download
 
 2. Run tests:
 ```bash
-go test ./...
+make test
 ```
 
-3. Build and run with hot reload (requires [air](https://github.com/cosmtrek/air)):
+3. Build and run with hot reload:
 ```bash
-air -c .air.toml
+make dev
 ```
 
 ## Usage
@@ -76,6 +78,9 @@ k8spreview <yaml-file>
 
 # Show version information
 k8spreview -version
+
+# Run with example file
+make run
 ```
 
 ### Navigation
@@ -119,60 +124,70 @@ See the [examples](./examples) directory for more sample YAML files.
 
 ## Development
 
+### Available Make Commands
+
+```bash
+make help          # Show available commands
+make build         # Build the application
+make test          # Run tests
+make test-coverage # Run tests with coverage report
+make clean         # Clean build artifacts
+make run           # Build and run the application
+make dev           # Run with hot reload
+make fmt           # Format code
+make lint          # Run linter
+make verify        # Run format, lint and tests
+make release v=x.x.x # Create and push a new release
+```
+
 ### Running Tests
 
 Run all tests:
 ```bash
-go test ./...
+make test
 ```
 
 Run tests with coverage:
 ```bash
-go test -cover ./...
-```
-
-Generate coverage report:
-```bash
-go test -coverprofile=coverage.out ./...
-go tool cover -html=coverage.out
+make test-coverage
 ```
 
 ### Code Style
 
-The project follows standard Go code style. Before committing, ensure your code:
+The project follows standard Go code style. Before committing, ensure your code passes verification:
 
-1. Is formatted with `gofmt`:
 ```bash
-gofmt -s -w .
+make verify
 ```
 
-2. Passes static analysis:
-```bash
-go vet ./...
-```
-
-3. Has no linting errors (requires [golangci-lint](https://golangci-lint.run/)):
-```bash
-golangci-lint run
-```
+This will:
+1. Format the code with `gofmt`
+2. Run the linter
+3. Run all tests
 
 ### Release Process
 
-1. Update version in `pkg/version/version.go`
-2. Create and push a new tag:
+1. Create a new release:
 ```bash
-git tag -a v0.1.1 -m "Release v0.1.1"
-git push origin v0.1.1
+make release v=0.1.3
 ```
-3. GitHub Actions will automatically build and publish the release
+
+This will:
+- Update version in `pkg/version/version.go`
+- Create and push a git tag
+- Trigger GitHub Actions to:
+  - Build binaries for all platforms
+  - Create a GitHub release
+  - Upload the binaries
 
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes and run verification (`make verify`)
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ## License
 
