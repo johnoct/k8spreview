@@ -40,15 +40,11 @@ changelog:
       - "^chore:"
 
 brews:
-  - name: k8spreview
+  - repository:
+      owner: yourusername
+      name: homebrew-tap
     homepage: "https://github.com/yourusername/k8spreview"
     description: "A terminal-based Kubernetes YAML resource viewer with an interactive TUI interface"
     license: "MIT"
-    tap:
-      owner: yourusername
-      name: homebrew-tap
-    folder: Formula
-    install: |
-      bin.install "k8spreview"
     test: |
       system "#{bin}/k8spreview -version"
