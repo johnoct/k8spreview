@@ -24,27 +24,20 @@ A terminal-based Kubernetes YAML resource viewer with an interactive TUI interfa
 The easiest way to install k8spreview is using Go:
 
 ```bash
-go install github.com/yourusername/k8spreview@latest  # Latest version
+go install github.com/johnoct/k8spreview@latest  # Latest version
 # or
-go install github.com/yourusername/k8spreview@v0.1.0  # Specific version
-```
-
-### Using Homebrew
-
-```bash
-brew tap yourusername/tap
-brew install k8spreview
+go install github.com/johnoct/k8spreview@v0.1.1  # Specific version
 ```
 
 ### Binary Releases
 
-Download pre-built binaries from the [releases page](https://github.com/yourusername/k8spreview/releases).
+Download pre-built binaries from the [releases page](https://github.com/johnoct/k8spreview/releases).
 
 ### Building from Source
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/k8spreview.git
+git clone https://github.com/johnoct/k8spreview.git
 cd k8spreview
 ```
 
@@ -168,8 +161,8 @@ golangci-lint run
 1. Update version in `pkg/version/version.go`
 2. Create and push a new tag:
 ```bash
-git tag -a v0.1.0 -m "Release v0.1.0"
-git push origin v0.1.0
+git tag -a v0.1.1 -m "Release v0.1.1"
+git push origin v0.1.1
 ```
 3. GitHub Actions will automatically build and publish the release
 
