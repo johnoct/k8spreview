@@ -73,8 +73,11 @@ make dev
 ## Usage
 
 ```bash
-# View a YAML file
-k8spreview <yaml-file>
+# View one or more YAML files
+k8spreview [file1.yaml file2.yaml ...]
+
+# Read YAML from stdin
+cat file.yaml | k8spreview -
 
 # Show version information
 k8spreview -version

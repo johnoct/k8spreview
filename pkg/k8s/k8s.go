@@ -1,7 +1,6 @@
 package k8s
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -26,15 +25,10 @@ type Resource struct {
 	Data       interface{} `yaml:"data,omitempty"`
 }
 
-// ParseFromFile parses Kubernetes resources from a YAML file
-func ParseFromFile(filename string) ([]Resource, error) {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, fmt.Errorf("error reading file: %w", err)
-	}
-
+// Parse parses Kubernetes resources from an io.Reader
+func Parse(r io.Reader) ([]Resource, error) {
 	var resources []Resource
-	decoder := yaml.NewDecoder(bytes.NewReader(data))
+	decoder := yaml.NewDecoder(r)
 	for {
 		var resource Resource
 		if err := decoder.Decode(&resource); err != nil {
@@ -45,8 +39,17 @@ func ParseFromFile(filename string) ([]Resource, error) {
 		}
 		resources = append(resources, resource)
 	}
-
 	return resources, nil
+}
+
+// ParseFromFile parses Kubernetes resources from a YAML file
+func ParseFromFile(filename string) ([]Resource, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, fmt.Errorf("error opening file: %w", err)
+	}
+	defer f.Close()
+	return Parse(f)
 }
 
 // Export exports a resource to a YAML file
