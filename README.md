@@ -88,18 +88,25 @@ make run
  
 ## Automated Releases
 
-We use GoReleaser to build and publish binaries automatically on new tags.
-To create a release:
+We use a PR‑based workflow followed by an explicit tag push to build and publish binaries.
+
+1) Create a bump PR:
 ```bash
-make release v=x.y.z
+make release-pr v=x.y.z
 ```
 This will:
-1. Update `pkg/version/version.go`.
-2. Commit and push the change and tag.
-3. Trigger the GitHub Actions release workflow to build binaries for all platforms
-   and publish them to the GitHub release.
+  • Create a branch `release/vx.y.z` and update `pkg/version/version.go`.
+  • Open a GitHub PR titled `chore: bump version to vx.y.z`.
 
-Pushing any new tag matching `v*.*.*` will also trigger the release workflow.
+   After review & merge into `main`, proceed to step 2.
+
+2) Tag the release:
+```bash
+make release-tag v=x.y.z
+```
+This will:
+  • Create and push the annotated tag `vx.y.z`.
+  • Trigger the GoReleaser GitHub Actions workflow to build & publish binaries.
 
 ### Navigation
 
