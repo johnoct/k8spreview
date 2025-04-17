@@ -55,19 +55,41 @@ lint:
 verify: fmt lint test
 
 # Create a new release
+# (Legacy) Create a new release by bumping version, tagging, and pushing directly to main.
+# Not recommended; see release-pr and release-tag for a PR-based workflow.
 release:
+	@echo "Deprecated: 'make release' pushes directly to main."
+	@echo "Use 'make release-pr' and 'make release-tag' for a PR-based process."
+	@exit 1
+
+# Open a PR to bump the version in pkg/version/version.go
+.PHONY: release-pr
+release-pr:
 	@if [ "${v}" = "" ]; then \
-		echo "Please specify version: make release v=x.x.x"; \
+		echo "Usage: make release-pr v=x.y.z"; \
 		exit 1; \
 	fi
-	@echo "Creating release v${v}..."
-	@echo "Updating version in version.go..."
-	@sed -i '' 's/Version = ".*"/Version = "v${v}"/' pkg/version/version.go
+	@echo "Creating release branch and PR for v${v}..."
+	@git checkout -b release/v${v}
+	@sed -i '' -e 's/Version = \\".*\\"/Version = "v${v}"/' pkg/version/version.go
 	@git add pkg/version/version.go
 	@git commit -m "chore: bump version to v${v}"
+	@git push --set-upstream origin release/v${v}
+	@gh pr create --title "chore: bump version to v${v}" \
+		--body "Automated version bump for release v${v}." \
+		--base main \
+		--head release/v${v}
+
+# Tag and push a release tag (after PR merge)
+.PHONY: release-tag
+release-tag:
+	@if [ "${v}" = "" ]; then \
+		echo "Usage: make release-tag v=x.y.z"; \
+		exit 1; \
+	fi
+	@echo "Tagging release v${v} and pushing tag..."
 	@git tag -a "v${v}" -m "Release v${v}"
-	@git push origin main "v${v}"
-	@echo "Release v${v} created and pushed!"
+	@git push origin "v${v}"
 
 # Show help
 help:
