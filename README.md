@@ -85,6 +85,21 @@ k8spreview -version
 # Run with example file
 make run
 ```
+ 
+## Automated Releases
+
+We use GoReleaser to build and publish binaries automatically on new tags.
+To create a release:
+```bash
+make release v=x.y.z
+```
+This will:
+1. Update `pkg/version/version.go`.
+2. Commit and push the change and tag.
+3. Trigger the GitHub Actions release workflow to build binaries for all platforms
+   and publish them to the GitHub release.
+
+Pushing any new tag matching `v*.*.*` will also trigger the release workflow.
 
 ### Navigation
 
