@@ -28,6 +28,7 @@ test-coverage:
 clean:
 	@echo "Cleaning..."
 	@rm -f ${BINARY_NAME}
+	@rm -f cassette.tape
 	@rm -f coverage.out
 	@rm -rf dist/
 	@rm -rf tmp/

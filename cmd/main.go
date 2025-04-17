@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"k8spreview/pkg/k8s"
 	"k8spreview/pkg/ui"
 	"k8spreview/pkg/version"
 )
@@ -21,14 +22,43 @@ func main() {
 	}
 
 	args := flag.Args()
-	if len(args) != 1 {
-		fmt.Println("Usage: k8spreview <yaml-file>")
-		fmt.Println("       k8spreview -version")
-		os.Exit(1)
+	var resources []k8s.Resource
+	if len(args) == 0 {
+		fi, err := os.Stdin.Stat()
+		if err != nil {
+			fmt.Printf("Error reading stdin: %v\n", err)
+			os.Exit(1)
+		}
+		// If data is being piped in, read from stdin
+		if (fi.Mode() & os.ModeCharDevice) == 0 {
+			resources, err = k8s.Parse(os.Stdin)
+			if err != nil {
+				fmt.Printf("Error parsing YAML from stdin: %v\n", err)
+				os.Exit(1)
+			}
+		} else {
+			fmt.Println("Usage: k8spreview <file1.yaml> [file2.yaml ...]")
+			fmt.Println("       cat file.yaml | k8spreview -")
+			os.Exit(1)
+		}
+	} else {
+		for _, path := range args {
+			var rs []k8s.Resource
+			var err error
+			if path == "-" {
+				rs, err = k8s.Parse(os.Stdin)
+			} else {
+				rs, err = k8s.ParseFromFile(path)
+			}
+			if err != nil {
+				fmt.Printf("Error parsing YAML from %s: %v\n", path, err)
+				os.Exit(1)
+			}
+			resources = append(resources, rs...)
+		}
 	}
 
-	yamlPath := args[0]
-	if err := ui.Run(yamlPath); err != nil {
+	if err := ui.RunWithResources(resources); err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
