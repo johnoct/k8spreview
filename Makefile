@@ -71,7 +71,8 @@ release-pr:
 	fi
 	@echo "Creating release branch and PR for v${v}..."
 	@git checkout -b release/v${v}
-	@sed -i '' -e 's/Version = \\".*\\"/Version = "v${v}"/' pkg/version/version.go
+	@echo "Updating pkg/version/version.go"
+	@sed -i.bak -e 's|Version = ".*"|Version = "v${v}"|' pkg/version/version.go && rm pkg/version/version.go.bak
 	@git add pkg/version/version.go
 	@git commit -m "chore: bump version to v${v}"
 	@git push --set-upstream origin release/v${v}
