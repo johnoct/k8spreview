@@ -142,9 +142,7 @@ See the [examples](./examples) directory for more sample YAML files.
 │   │   └── doc.go       # Package documentation
 │   └── version/         # Version information
 │       └── version.go   # Version, commit, and build date
-├── docs/                # Documentation
-├── examples/            # Example YAML files
-└── tests/              # Test files
+└── examples/            # Example YAML files
 ```
 
 ## Development
