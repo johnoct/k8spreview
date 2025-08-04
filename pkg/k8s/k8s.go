@@ -18,7 +18,7 @@ type Metadata struct {
 
 // Resource represents a Kubernetes resource
 type Resource struct {
-	ApiVersion string      `yaml:"apiVersion"`
+    APIVersion string      `yaml:"apiVersion"`
 	Kind       string      `yaml:"kind"`
 	Metadata   Metadata    `yaml:"metadata"`
 	Spec       interface{} `yaml:"spec,omitempty"`
