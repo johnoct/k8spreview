@@ -182,12 +182,20 @@ func (m Model) generateGraph() string {
 		for _, rel := range relations {
 			var r relationship
 			if strings.HasPrefix(rel, "→") {
-				parts := strings.Split(strings.TrimPrefix(rel, "→ "), "/")
+				relationText := strings.TrimPrefix(rel, "→ ")
+				parts := strings.SplitN(relationText, " ", 2)
 				if len(parts) == 2 {
-					r = relationship{
-						from:     nodeKey,
-						to:       fmt.Sprintf("%s/%s", parts[0], strings.TrimSpace(parts[1])),
-						relation: "uses",
+					target := strings.Split(parts[1], "/")
+					if len(target) == 2 {
+						relType := "uses"
+						if parts[0] == "Selects" {
+							relType = "selects"
+						}
+						r = relationship{
+							from:     nodeKey,
+							to:       fmt.Sprintf("%s/%s", target[0], strings.TrimSpace(target[1])),
+							relation: relType,
+						}
 					}
 				}
 			} else if strings.HasPrefix(rel, "←") {
