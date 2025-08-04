@@ -49,7 +49,7 @@ func NewModel(resources []k8s.Resource) Model {
 	for i, res := range resources {
 		items[i] = item{
 			title:       fmt.Sprintf("%s/%s", res.Kind, res.Metadata.Name),
-			description: fmt.Sprintf("API Version: %s, Namespace: %s", res.ApiVersion, res.Metadata.Namespace),
+                        description: fmt.Sprintf("API Version: %s, Namespace: %s", res.APIVersion, res.Metadata.Namespace),
 			resource:    res,
 		}
 	}

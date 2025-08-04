@@ -51,27 +51,39 @@ spec:
 	}
 
 	// Check first resource (Service)
-	if resources[0].Kind != "Service" {
-		t.Errorf("Expected Service, got %s", resources[0].Kind)
-	}
-	if resources[0].Metadata.Name != "test-service" {
-		t.Errorf("Expected test-service, got %s", resources[0].Metadata.Name)
-	}
+        if resources[0].Kind != "Service" {
+                t.Errorf("Expected Service, got %s", resources[0].Kind)
+        }
+        if resources[0].Metadata.Name != "test-service" {
+                t.Errorf("Expected test-service, got %s", resources[0].Metadata.Name)
+        }
+        if resources[0].Metadata.Namespace != "default" {
+                t.Errorf("Expected namespace default, got %s", resources[0].Metadata.Namespace)
+        }
+        if resources[0].APIVersion != "v1" {
+                t.Errorf("Expected API version v1, got %s", resources[0].APIVersion)
+        }
 
 	// Check second resource (Deployment)
-	if resources[1].Kind != "Deployment" {
-		t.Errorf("Expected Deployment, got %s", resources[1].Kind)
-	}
-	if resources[1].Metadata.Name != "test-deployment" {
-		t.Errorf("Expected test-deployment, got %s", resources[1].Metadata.Name)
-	}
+        if resources[1].Kind != "Deployment" {
+                t.Errorf("Expected Deployment, got %s", resources[1].Kind)
+        }
+        if resources[1].Metadata.Name != "test-deployment" {
+                t.Errorf("Expected test-deployment, got %s", resources[1].Metadata.Name)
+        }
+        if resources[1].Metadata.Namespace != "default" {
+                t.Errorf("Expected namespace default, got %s", resources[1].Metadata.Namespace)
+        }
+        if resources[1].APIVersion != "apps/v1" {
+                t.Errorf("Expected API version apps/v1, got %s", resources[1].APIVersion)
+        }
 }
 
 func TestFindRelatedResources(t *testing.T) {
 	// Create test resources
-	service := k8s.Resource{
-		ApiVersion: "v1",
-		Kind:       "Service",
+        service := k8s.Resource{
+                APIVersion: "v1",
+                Kind:       "Service",
 		Metadata: k8s.Metadata{
 			Name: "test-service",
 		},
@@ -82,9 +94,9 @@ func TestFindRelatedResources(t *testing.T) {
 		},
 	}
 
-	deployment := k8s.Resource{
-		ApiVersion: "apps/v1",
-		Kind:       "Deployment",
+        deployment := k8s.Resource{
+                APIVersion: "apps/v1",
+                Kind:       "Deployment",
 		Metadata: k8s.Metadata{
 			Name: "test-deployment",
 		},
