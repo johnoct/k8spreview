@@ -81,8 +81,10 @@ func (r Resource) FindRelatedResources(allResources []Resource) []string {
 				// Find Deployments, StatefulSets, and Pods matching the selector
 				for _, res := range allResources {
 					if res.Kind == "Deployment" || res.Kind == "StatefulSet" || res.Kind == "Pod" {
-						if matchLabels(selectorStringMap, res.Metadata.Labels) {
-							relations = append(relations, fmt.Sprintf("→ Selects %s/%s", res.Kind, res.Metadata.Name))
+						if labels := getResourceLabels(res); labels != nil {
+							if matchLabels(selectorStringMap, labels) {
+								relations = append(relations, fmt.Sprintf("→ Selects %s/%s", res.Kind, res.Metadata.Name))
+							}
 						}
 					}
 				}
@@ -216,6 +218,26 @@ func findVolumes(spec map[string]interface{}) ([]map[string]interface{}, bool) {
 		}
 	}
 	return nil, false
+}
+
+func getResourceLabels(res Resource) map[string]string {
+	switch res.Kind {
+	case "Pod":
+		return res.Metadata.Labels
+	case "Deployment", "StatefulSet":
+		spec := reflect.ValueOf(res.Spec)
+		if spec.Kind() == reflect.Map {
+			specMap := spec.Interface().(map[string]interface{})
+			if template, ok := specMap["template"].(map[string]interface{}); ok {
+				if metadata, ok := template["metadata"].(map[string]interface{}); ok {
+					if labels, ok := metadata["labels"].(map[string]interface{}); ok {
+						return convertToStringMap(labels)
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func matchLabels(selector, labels map[string]string) bool {
