@@ -87,9 +87,6 @@ func TestFindRelatedResources(t *testing.T) {
 		Kind:       "Deployment",
 		Metadata: k8s.Metadata{
 			Name: "test-deployment",
-			Labels: map[string]string{
-				"app": "test",
-			},
 		},
 		Spec: map[string]interface{}{
 			"template": map[string]interface{}{
